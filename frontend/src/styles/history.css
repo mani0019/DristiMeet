@@ -1,0 +1,35 @@
+/* ===============================
+   HISTORY PAGE
+================================ */
+
+.historyPage {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 24px;
+}
+
+.historyHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+/* Grid */
+.historyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.historyCard {
+  border-radius: 16px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  margin-top: 120px;
+}

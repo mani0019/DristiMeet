@@ -1,0 +1,100 @@
+/* ===============================
+   HOME PAGE (Dashboard)
+================================ */
+
+.navBar {
+  height: 64px;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navBar h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 4.5px;
+}
+
+.navBar p {
+  margin: 0 8px 0 4px;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* ===============================
+   MAIN CONTAINER
+================================ */
+
+.meetContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 80px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.leftPanel {
+  max-width: 520px;
+}
+
+.heroTitle {
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.heroSubtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 32px;
+}
+
+.joinBox {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.joinBtn {
+  height: 40px;
+  padding: 0 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.rightPanel img {
+  width: 900px;
+  max-width: 100%;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+  .meetContainer {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .leftPanel {
+    margin-bottom: 40px;
+  }
+
+  .joinBox {
+    justify-content: center;
+  }
+
+  .heroTitle {
+    font-size: 34px;
+  }
+}

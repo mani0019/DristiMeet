@@ -1,0 +1,283 @@
+/* ===============================
+   Main Container
+================================ */
+
+.meetVideoContainer {
+  height: 100vh;
+  width: 100%;
+  background: #f8fafc; /* light gray */
+  position: relative;
+  overflow: hidden;
+  color: #0f172a;
+}
+
+/* ===============================
+   Video Grid
+================================ */
+
+.conferenceView {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  margin-top: 90px;
+}
+
+.videoCard {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.videoCard video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===============================
+   Local Video (Floating)
+================================ */
+
+.localVideo {
+  position: fixed;
+  bottom: 100px;
+  left: 20px;              /* 👈 MOVED TO LEFT */
+  width: 220px;
+  height: 150px;
+  border-radius: 14px;
+  border: 2px solid #2563eb;
+  object-fit: cover;
+  background: #000;        /* 👈 IMPORTANT */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  z-index: 999;            /* 👈 VERY IMPORTANT */
+}
+
+
+/* ===============================
+   Controls Bar (Floating)
+================================ */
+
+.controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  padding: 10px 22px;
+  border-radius: 40px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+}
+
+/* ===============================
+   Chat Panel
+================================ */
+
+.chatRoom {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 340px;
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  z-index: 30;
+}
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chatContainer h1 {
+  margin: 0;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chattingDisplay {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.chattingDisplay p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.chattingArea {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ===============================
+   Lobby (Pre-Join)
+================================ */
+
+.lobby {
+  height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.lobby h2 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.lobby video {
+  width: 280px;
+  border-radius: 14px;
+  margin-top: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+/* ===============================
+   Control Buttons (Icons)
+================================ */
+
+.controlBtn {
+  background: #f1f5f9;
+  color: #334155;
+  transition: all 0.2s ease;
+}
+
+.controlBtn:hover {
+  background: #e2e8f0;
+  color: #2563eb;
+}
+
+/* Active state (when video/audio ON) */
+.controlBtn svg {
+  font-size: 22px;
+}
+
+/* ===============================
+   End Call Button
+================================ */
+
+.endCallBtn {
+  background: #ef4444 !important;
+  color: white !important;
+}
+
+.endCallBtn:hover {
+  background: #dc2626 !important;
+}
+
+/* ===============================
+   Badge fix (chat count)
+================================ */
+
+.MuiBadge-badge {
+  font-size: 11px;
+}
+/* ===============================
+   LOBBY
+================================ */
+
+.lobbyWrapper {
+  height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.lobbyCard {
+  background: #ffffff;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+}
+
+/* LEFT */
+.lobbyLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lobbyLeft h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.lobbySubtitle {
+  color: #6b7280;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+/* RIGHT */
+.lobbyRight {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoPreview {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.videoPreview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewLabel {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .lobbyCard {
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .lobbyLeft h1 {
+    text-align: center;
+  }
+
+  .lobbySubtitle {
+    text-align: center;
+  }
+}
