@@ -1,8 +1,11 @@
 import { User } from "../model/user.js";
 import httpStatus from "http-status";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import { Meeting } from "../model/meeting.js";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+const JWT_EXPIRY = "7d";
 
 /* ===============================
    LOGIN
@@ -31,9 +34,12 @@ const login = async (req, res) => {
         .json({ message: "Invalid credentials" });
     }
 
-    const token = crypto.randomBytes(20).toString("hex");
-    user.token = token;
-    await user.save();
+    // ✅ JWT instead of crypto token
+    const token = jwt.sign(
+      { userId: user._id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRY }
+    );
 
     return res.status(httpStatus.OK).json({ token });
   } catch (err) {
@@ -84,20 +90,20 @@ const getUserHistory = async (req, res) => {
   const { token } = req.query;
 
   try {
-    const user = await User.findOne({ token });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // ✅ Verify JWT instead of DB lookup
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-    const meetings = await Meeting.find({ user_id: user.username })
+    const meetings = await Meeting.find({ user_id: decoded.username })
       .sort({ date: -1 });
 
     res.json({ meetings });
   } catch (err) {
+    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+      return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid or expired token" });
+    }
     res.status(500).json({ message: err.message });
   }
 };
-
 
 /* ===============================
    ADD TO HISTORY
@@ -106,18 +112,19 @@ const addToHistory = async (req, res) => {
   const { token, meetingCode } = req.body;
 
   try {
-    const user = await User.findOne({ token });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // ✅ Verify JWT instead of DB lookup
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     await Meeting.create({
-      user_id: user.username,   // or user._id if you prefer
+      user_id: decoded.username,
       meetingCode,
     });
 
     res.status(201).json({ message: "Meeting added" });
   } catch (err) {
+    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+      return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid or expired token" });
+    }
     res.status(500).json({ message: err.message });
   }
 };
