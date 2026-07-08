@@ -5,116 +5,258 @@ import "../App.css";
 export default function LandingPage() {
   const navigate = useNavigate();
 
+  const generateRoom = () => {
+    const roomId = Math.random().toString(36).substring(2, 8);
+    navigate(`/${roomId}`);
+  };
+
   return (
     <div className="landingPage">
 
       {/* NAVBAR */}
-     <nav className="landingNav">
-  <div className="brand">
-    <img src="/logo.png" alt="DrishtiMeet logo" />
-    <h2>DrishtiMeet</h2>
-  </div>
+      <nav className="landingNav">
+        <div className="brand">
+          <img src="/logo.png" alt="DristiMeet Logo" />
+          <h2>DristiMeet</h2>
+        </div>
 
-  <div className="navActions">
-    <button className="navLink" onClick={() => navigate("/auth")}>
-      Login
-    </button>
-    <button className="navLink" onClick={() => navigate("/auth")}>
-      Register
-    </button>
-    <button className="primaryBtn" onClick={() => navigate("/:qurl")}>
-      Join as Guest
-    </button>
-  </div>
-</nav>
-
-
-      {/* HERO */}
-      <section className="heroSection">
-        <div className="heroText">
-          <h1>
-             Seamless Video Meetings with{" "}
-            <span className="highlight">DrishtiMeet</span>
-          </h1>
-          <p>
-            Secure, fast and reliable video conferencing for students,
-            teams and professionals.
-          </p>
+        <div className="navActions">
           <button
-            className="primaryBtn largeBtn"
-            onClick={() => navigate("/home")}
+            className="navLink"
+            onClick={() => navigate("/auth")}
           >
-            Get Started for Free
+            Login
+          </button>
+
+          <button
+            className="navLink"
+            onClick={() => navigate("/auth")}
+          >
+            Register
+          </button>
+
+          <button
+            className="primaryBtn"
+            onClick={generateRoom}
+          >
+            Launch Workspace →
           </button>
         </div>
+      </nav>
 
-        <div className="heroImage">
-          <img src="/landing.png" alt="Video meeting" />
+      {/* HERO SECTION */}
+      <section className="heroSection">
+
+        <div className="heroText">
+          <div className="heroBadge">
+            REDEFINING DEVELOPER COLLABORATION
+          </div>
+
+          <h1>
+            One Workspace.
+            <br />
+            <span className="highlight">
+              Infinite Collaboration.
+            </span>
+          </h1>
+
+          <p>
+            Meet, code, share, and build together in real time.
+            DristiMeet combines video conferencing, collaborative coding,
+            screen sharing, and team communication into a single, cohesive canvas.
+          </p>
+
+          <div className="heroButtons">
+            <button
+              className="primaryBtn largeBtn"
+              onClick={() => navigate("/home")}
+            >
+              Start Collaborating
+            </button>
+
+            <button
+              className="secondaryBtn"
+              onClick={generateRoom}
+            >
+              Join as Guest
+            </button>
+          </div>
+
+          <div className="techStack">
+            Powered by WebRTC • Monaco Editor • Yjs • Socket.IO
+          </div>
         </div>
+
+        {/* WORKSPACE INTERFACE PREVIEW */}
+        <div className="workspaceMockup">
+          <div className="mockupTopBar">
+            <div className="dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div className="mockupTitle">
+              collaborative-session.js
+            </div>
+          </div>
+
+          <div className="mockupBody">
+            <div className="editorArea">
+              <pre>
+{`function collaborate() {
+  const team = ["Manish", "Alex"];
+
+  return team.map(user => ({
+    online: true,
+    coding: true
+  }));
+}`}
+              </pre>
+            </div>
+
+            <div className="chatArea">
+              <h4>Team Chat</h4>
+
+              <div className="message">
+                <span>Alex</span>
+                <p>Let's optimize this runtime state.</p>
+              </div>
+
+              <div className="message">
+                <span>Manish</span>
+                <p>Working on it 🚀</p>
+              </div>
+
+              <div className="message">
+                <span>Sarah</span>
+                <p>CRDT sync engine looks solid.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="videoStrip">
+            <div className="videoCard">
+              <div className="avatar">M</div>
+              <text>Manish</text>
+            </div>
+
+            <div className="videoCard">
+              <div className="avatar">A</div>
+              <text>Alex</text>
+            </div>
+
+            <div className="videoCard">
+              <div className="avatar">S</div>
+              <text>Sarah</text>
+            </div>
+
+            <div className="videoCard">
+              <div className="avatar">J</div>
+              <text>John</text>
+            </div>
+          </div>
+        </div>
+
       </section>
 
-      {/* FEATURES */}
+      {/* FEATURES SECTION */}
       <section className="featuresSection">
-        <h2>Everything you need for online meetings</h2>
+        <h2>Why Teams Choose DristiMeet</h2>
+        <p className="sectionSubtext">
+          Everything your technical team needs to build together, context-free.
+        </p>
 
         <div className="featuresGrid">
           <div className="featureCard">
-            <h3>HD Video Calls</h3>
-            <p>Crystal clear video and audio powered by WebRTC.</p>
+            <h3>HD Video Meetings</h3>
+            <p>
+              Crystal-clear communication and multi-participant spaces powered directly by customized WebRTC routing.
+            </p>
           </div>
 
           <div className="featureCard">
-            <h3>Screen Sharing</h3>
-            <p>Share your screen instantly with one click.</p>
+            <h3>Live Collaborative Coding</h3>
+            <p>
+              Conflict-free writing and synchronization using Yjs and an embedded Monaco Editor canvas.
+            </p>
           </div>
 
           <div className="featureCard">
-            <h3>Live Chat</h3>
-            <p>Chat in real-time during meetings.</p>
+            <h3>Integrated Team Chat</h3>
+            <p>
+              Keep technical architectural notes directly alongside your video communication channels.
+            </p>
           </div>
 
           <div className="featureCard">
-            <h3>Secure Meetings</h3>
-            <p>Protected routes and token-based authentication.</p>
+            <h3>Low-Latency Screen Sharing</h3>
+            <p>
+              Present complete desktop window viewports instantly during review sessions and pairs debugging steps.
+            </p>
+          </div>
+
+          <div className="featureCard">
+            <h3>Presence Tracking</h3>
+            <p>
+              Monitor workspace activity states instantly via Socket.IO-driven collaborator synchronization fields.
+            </p>
+          </div>
+
+          <div className="featureCard">
+            <h3>Isolated Workspaces</h3>
+            <p>
+              Ensure complete room partition security through session access gates and persistent database paths.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* TARGET AUDIENCE SECTION */}
       <section className="stepsSection">
-        <h2>How DrishtiMeet Works</h2>
+        <h2>Built For Builders</h2>
 
         <div className="stepsGrid">
           <div className="step">
-            <span>1</span>
-            <p>Create or join a meeting</p>
+            <span>🧑‍💻</span>
+            <h4>Developers</h4>
           </div>
+
           <div className="step">
-            <span>2</span>
-            <p>Allow camera & microphone</p>
+            <span>🎓</span>
+            <h4>Students</h4>
           </div>
+
           <div className="step">
-            <span>3</span>
-            <p>Connect and collaborate</p>
+            <span>🚀</span>
+            <h4>Startup Teams</h4>
+          </div>
+
+          <div className="step">
+            <span>👨‍🏫</span>
+            <h4>Mentors</h4>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CALL TO ACTION */}
       <section className="ctaSection">
-        <h2>Start your first meeting in seconds</h2>
-        <p>No downloads. No setup. Just connect.</p>
+        <h2>Your Next Project Starts Here.</h2>
+        <p>
+          Bring context, development execution tools, and crystal clear communication lines into a single workspace wrapper.
+        </p>
         <button
           className="primaryBtn largeBtn"
           onClick={() => navigate("/home")}
         >
-          Start a Meeting
+          Launch Workspace →
         </button>
       </section>
 
       {/* FOOTER */}
       <footer className="footer">
-        <p>© {new Date().getFullYear()} DrishtiMeet. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} DristiMeet. Built for collaboration.
+        </p>
       </footer>
 
     </div>

@@ -1,39 +1,52 @@
-/* ===============================
-   GLOBAL RESET
-================================ */
+/* =========================================
+   1. GLOBAL SYSTEM CONFIGURATION
+========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
-  background-color: #f9fafb;
-  color: #0f172a;
+html {
+  scroll-behavior: smooth;
 }
 
-/* ===============================
-   LANDING PAGE
-================================ */
+body {
+  font-family: "Inter", sans-serif;
+  background: #080710;
+  color: #f1f5f9;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
 
+/* =========================================
+   2. PAGE BASE & THEME CONTEXT
+========================================= */
 .landingPage {
   min-height: 100vh;
-  width: 100%;
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12), transparent 50%),
+    #080710;
 }
 
-/* ===============================
-   NAVBAR
-================================ */
-
+/* =========================================
+   3. NAVIGATION LAYER (Ultra-Minimalist)
+========================================= */
 .landingNav {
-  height: 72px;
-  padding: 0 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+  padding: 0 40px;
+  background: rgba(8, 7, 16, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .brand {
@@ -43,64 +56,90 @@ body {
 }
 
 .brand img {
-  height: 36px;
+  height: 32px;
   width: auto;
+  object-fit: contain;
 }
 
 .brand h2 {
-  font-size: 30px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: #2563eb;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
 }
 
 .navActions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .navLink {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 16px;
-  font-weight: 500;
-  color: #374151;
+  color: #94a3b8;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .navLink:hover {
-  color: #2563eb;
+  color: #ffffff;
 }
 
+/* =========================================
+   4. CORE BUTTON DESIGN MATRICES
+========================================= */
 .primaryBtn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  background: #6366f1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .primaryBtn:hover {
-  background: #1d4ed8;
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
 }
 
 .largeBtn {
-  padding: 14px 28px;
-  font-size: 16px;
+  padding: 14px 24px;
+  font-size: 15px;
 }
 
-/* ===============================
-   HERO SECTION
-================================ */
+.secondaryBtn {
+  background: #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
+.secondaryBtn:hover {
+  background: #1a1926;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* =========================================
+   5. HERO ARCHITECTURE
+========================================= */
 .heroSection {
   max-width: 1200px;
   margin: auto;
-  padding: 70px 64px 40px; /* reduced bottom gap */
+  padding: 100px 40px 60px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -108,179 +147,439 @@ body {
 }
 
 .heroText {
-  max-width: 520px;
+  flex: 1.1;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #818cf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .heroText h1 {
-  font-size: 44px;
+  font-size: 56px;
   font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 16px;
-}
-
-.heroText p {
-  font-size: 16px;
-  color: #6b7280;
-  margin-bottom: 28px;
+  line-height: 1.1;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
 }
 
 .highlight {
-  color: #f97316;
+  background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.heroImage img {
-  width: 440px;
-  max-width: 100%;
+.heroText p {
+  color: #94a3b8;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 540px;
+  margin-bottom: 36px;
 }
 
-/* ===============================
-   FEATURES
-================================ */
-
-.featuresSection {
-  padding: 40px 64px 80px;
-  background: #ffffff;
-  text-align: center;
-  position: relative;
+.heroButtons {
+  display: flex;
+  gap: 12px;
 }
 
-.featuresSection::before {
-  content: "";
-  position: absolute;
-  top: -40px;
-  left: 0;
+.techStack {
+  margin-top: 32px;
+  color: #475569;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+/* =========================================
+   6. APP INTERFACE REAL-TIME MOCKUP
+========================================= */
+.workspaceMockup {
+  flex: 0.9;
   width: 100%;
-  height: 40px;
-  background: linear-gradient(
-    to bottom,
-    rgba(249, 250, 251, 0),
-    #ffffff
-  );
+  background: #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
+  animation: float 6s ease-in-out infinite;
+}
+
+.mockupTopBar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #0c0b12;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.dots span:nth-child(1) { background: #ef4444; }
+.dots span:nth-child(2) { background: #f59e0b; }
+.dots span:nth-child(3) { background: #22c55e; }
+
+.mockupTitle {
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.mockupBody {
+  display: flex;
+  min-height: 280px;
+  background: #12111a;
+}
+
+.editorArea {
+  flex: 1.8;
+  padding: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.editorArea pre {
+  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+  line-height: 1.6;
+  font-size: 12px;
+}
+
+.chatArea {
+  flex: 1;
+  padding: 16px;
+  background: #0c0b12;
+}
+
+.chatArea h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.message {
+  margin-bottom: 12px;
+}
+
+.message span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #818cf8;
+}
+
+.message p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* =========================================
+   7. VIDEO PRESENCE COMPONENT LAYOUTS
+========================================= */
+.videoStrip {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: #0c0b12;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.videoCard {
+  flex: 1;
+  background: #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; /* Keeps layout structural parameters solid */
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.videoCard text {
+  font-size: 12px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================
+   8. FEATURES CANVAS GRID MATRIX
+========================================= */
+.featuresSection {
+  padding: 100px 40px;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .featuresSection h2 {
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 700;
+  letter-spacing: -0.03em;
   margin-bottom: 12px;
 }
 
 .sectionSubtext {
-  max-width: 520px;
-  margin: 0 auto 40px;
-  font-size: 15px;
-  color: #6b7280;
+  color: #64748b;
+  font-size: 16px;
+  margin-bottom: 48px;
 }
 
 .featuresGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 28px;
-  max-width: 1100px;
-  margin: auto;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .featureCard {
-  background: #f9fafb;
-  padding: 32px;
-  border-radius: 16px;
-  text-align: left;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  background: #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .featureCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
   margin-bottom: 8px;
 }
 
-/* ===============================
-   STEPS
-================================ */
+.featureCard p {
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
+}
 
+/* =========================================
+   9. TARGET DEMOGRAPHICS ("BUILT FOR")
+========================================= */
 .stepsSection {
-  padding: 80px 64px;
+  padding: 80px 40px;
+  max-width: 1200px;
+  margin: auto;
   text-align: center;
 }
 
 .stepsSection h2 {
-  font-size: 32px;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 40px;
 }
 
 .stepsGrid {
   display: flex;
   justify-content: center;
-  gap: 48px;
-  margin-top: 40px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .step {
-  max-width: 180px;
+  width: 220px;
+  padding: 24px;
+  background: #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  text-align: left;
 }
 
 .step span {
-  display: inline-block;
-  width: 48px;
-  height: 48px;
-  background: #2563eb;
-  color: white;
-  border-radius: 50%;
-  line-height: 48px;
-  font-weight: 700;
+  font-size: 32px; /* Fixed explosion issue */
+  display: block;
   margin-bottom: 12px;
+  line-height: 1;
 }
 
-/* ===============================
-   CTA
-================================ */
+.step h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
 
+/* =========================================
+   10. CALL TO ACTION CONTAINER
+========================================= */
 .ctaSection {
-  padding: 80px 24px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
+  max-width: 1120px;
+  margin: 80px auto;
+  border-radius: 16px;
+  padding: 80px 40px;
   text-align: center;
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 70%), #12111a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .ctaSection h2 {
-  font-size: 36px;
-  margin-bottom: 12px;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
 }
 
 .ctaSection p {
-  margin-bottom: 24px;
-  opacity: 0.9;
+  color: #94a3b8;
+  margin-bottom: 28px;
+  font-size: 16px;
 }
 
-/* ===============================
-   FOOTER
-================================ */
-
+/* =========================================
+   11. STRUCTURAL FOOTER
+========================================= */
 .footer {
-  padding: 20px;
+  padding: 32px;
   text-align: center;
-  background: #020617;
-  color: #9ca3af;
-  font-size: 14px;
+  font-size: 13px;
+  color: #475569;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
+/* =========================================
+   14. PRE-MEETING LOBBY & HARDWARE STAGES
+========================================= */
 
-@media (max-width: 900px) {
-  .landingNav {
-    padding: 0 24px;
-  }
+/* Center alignment backdrop for the lobby layout card */
+.lobbyCenteringWrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
 
+/* Ambient glow focal background element specifically for entry */
+.lobbyAmbientGlow {
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1), transparent 65%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Hardened wrapper override configuration for the preview card container */
+.lobbyCardOverride {
+  background: #12111a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 40px !important;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7) !important;
+  zIndex: 1;
+  max-width: 1000px !important;
+}
+
+/* Dedicated viewport wrapper layout framework for hardware webcams */
+.videoPreviewViewport {
+  padding: 0px !important;
+  overflow: hidden !important;
+  aspect-ratio: 16 / 9 !important;
+  width: 100% !important;
+  background: #0c0b12 !important;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Mirrors and maps the raw web stream component data flawlessly */
+.videoPreviewViewport video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Flips the feed to mirror human movement naturally */
+}
+
+/* =========================================
+   12. INTERACTION TRANSFORM ANIMATIONS
+========================================= */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* =========================================
+   13. ADACTIVE RESPONSIVE ENGINES
+========================================= */
+@media (max-width: 1024px) {
   .heroSection {
     flex-direction: column;
     text-align: center;
-    padding: 60px 24px 30px;
+    padding-top: 60px;
+    gap: 40px;
   }
-
   .heroText h1 {
-    font-size: 36px;
+    font-size: 44px;
   }
+  .heroText p {
+    margin: 0 auto 32px auto;
+  }
+  .heroButtons {
+    justify-content: center;
+  }
+  .workspaceMockup {
+    max-width: 100%;
+  }
+}
 
-  .stepsGrid {
+@media (max-width: 768px) {
+  .landingNav {
+    padding: 0 20px;
+  }
+  .heroSection, .featuresSection, .stepsSection {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .mockupBody {
     flex-direction: column;
-    gap: 32px;
+  }
+  .editorArea {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   }
 }

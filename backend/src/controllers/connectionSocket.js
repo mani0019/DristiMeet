@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { YSocketIO } from "y-socket.io/dist/server";
 
 let connections = {};
 let messages = {};
@@ -13,11 +14,16 @@ export const connectToSocket = (server) => {
             credentials: true
         }
     });
+    const ysocketIO = new YSocketIO(io);
+    ysocketIO.initialize();
+    io.of("/collab").on("connection", (socket) => {
+    console.log("COLLAB namespace connected:", socket.id);
+});
 
     io.on("connection", (socket) => {
         console.log("New socket connected:", socket.id);
 
-        socket.on("join", (path) => {
+        socket.on('join-call', (path) => {
             if (!connections[path]) {
                 connections[path] = [];
             }
@@ -34,7 +40,7 @@ export const connectToSocket = (server) => {
             if (messages[path]) {
                 messages[path].forEach((msg) => {
                     io.to(socket.id).emit(
-                        "chatMessage",
+                        "chat-message",
                         msg.data,
                         msg.sender,
                         msg["socket-id-sender"]
@@ -47,7 +53,7 @@ export const connectToSocket = (server) => {
             io.to(toID).emit("signal", socket.id, message);
         });
 
-        socket.on("chatMessage", (data, sender) => {
+        socket.on('chat-message', (data, sender) => {
             const [matchingRoom, found] = Object.entries(connections).reduce(
                 ([room, isFound], [roomKey, roomValue]) => {
                     if (!isFound && roomValue.includes(socket.id)) {
@@ -70,12 +76,21 @@ export const connectToSocket = (server) => {
                 });
 
                 connections[matchingRoom].forEach((ele) => {
-                    io.to(ele).emit("chatMessage", data, sender, socket.id);
+                    io.to(ele).emit("chat-message", data, sender, socket.id);
                 });
             }
         });
+       socket.on("screen-share-started", (id) => {
+    console.log("SERVER GOT SCREEN SHARE:", id);
 
-        socket.on("disconnect", () => {
+    io.emit("screen-share-started", id);
+});
+
+    socket.on("screen-share-stopped", () => {
+    socket.broadcast.emit("screen-share-stopped");
+});
+
+    socket.on("disconnect", () => {
     const diffTime = Math.abs(timeOnline[socket.id] - Date.now());
     let key;
 
@@ -102,6 +117,7 @@ export const connectToSocket = (server) => {
 
     delete timeOnline[socket.id];
 });
+   
 
     });
 

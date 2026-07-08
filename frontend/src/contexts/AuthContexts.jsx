@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         name,
         password,
       });
-
+      
       if (request.status === 201) {
         return request.data.message;
       }

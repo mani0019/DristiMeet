@@ -265,7 +265,25 @@
   padding: 4px 10px;
   border-radius: 999px;
 }
+.videoLayout{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
 
+.mainStage{
+    width:100%;
+    height:70vh;
+    padding:10px;
+}
+
+.mainStage video{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:black;
+}
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .lobbyCard {
