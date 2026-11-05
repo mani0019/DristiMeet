@@ -14,6 +14,7 @@ import ChatIcon from '@mui/icons-material/Chat'
 import server from '../enviroment.js'
 import CodeIcon from '@mui/icons-material/Code';
 import CollabEditor from "./CollabEditor.jsx";
+import withAuth from "../utils/withAuth.jsx";
 import "../App.css";
 
 const server_url = server;
@@ -51,7 +52,7 @@ function replaceVideoTrackOnAllPeers(newTrack) {
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-export default function VideoMeetComponent() {
+ function VideoMeetComponent() {
 
     // --- DOM refs ---
     const localVideoref       = useRef(null);   // the <video> showing local feed
@@ -344,7 +345,16 @@ export default function VideoMeetComponent() {
     //    All changes after that → replaceTrack().
     // =========================================================================
     const connectToSocketServer = () => {
-        socketRef.current = io.connect(server_url, { secure: false });
+        socketRef.current = io.connect(server_url, {
+    auth: { token: localStorage.getItem("token") },
+});
+
+socketRef.current.on("connect_error", (err) => {
+    if (err.message === "unauthorized") {
+        localStorage.removeItem("token");
+        window.location.href = "/auth";
+    }
+});
 
         socketRef.current.on('signal', gotMessageFromServer);
 
@@ -361,7 +371,15 @@ export default function VideoMeetComponent() {
         socketRef.current.on('chat-message', addMessage);
 
         socketRef.current.on('connect', () => {
-            socketRef.current.emit('join-call', window.location.href);
+             Object.values(connections).forEach((pc) => { try { pc.close(); } catch {} });
+    connections = {};
+    videoRef.current = [];
+    setVideos([]);
+
+    // Make sure the handlers below are only registered once
+    socketRef.current.off('user-left');
+    socketRef.current.off('user-joined');
+            socketRef.current.emit('join-call', window.location.pathname);
             socketIdRef.current = socketRef.current.id;
 
             socketRef.current.on('user-left', (id) => {
@@ -731,24 +749,7 @@ streamToSend.getTracks().forEach(track => {
                                 </div>
 
                                 {/* Video strip — reads directly from stream refs, never steals localVideoref */}
-                                <div style={overlayStyles.videoStrip}>
-                                    <video
-                                        autoPlay muted playsInline
-                                        style={overlayStyles.stripVideo}
-                                        ref={ref => {
-                                            if (ref && cameraStreamRef.current)
-                                                ref.srcObject = cameraStreamRef.current;
-                                        }}
-                                    />
-                                    {videos.map(v => (
-                                        <video
-                                            key={v.socketId}
-                                            autoPlay playsInline
-                                            style={overlayStyles.stripVideo}
-                                            ref={ref => { if (ref && v.stream) ref.srcObject = v.stream; }}
-                                        />
-                                    ))}
-                                </div>
+                                
                             </div>
                         )}
 
@@ -758,3 +759,4 @@ streamToSend.getTracks().forEach(track => {
         </div>
     );
 }
+export default withAuth(VideoMeetComponent);

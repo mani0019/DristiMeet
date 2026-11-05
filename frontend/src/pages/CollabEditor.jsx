@@ -22,10 +22,13 @@ function CollabEditor({ roomId, username, serverUrl, onClose }) {
     if (!username || !roomId || !editorReady) return;
 
     if (yText.length === 0) {
-      yText.insert(0, "// write your code here");
+      yText.insert(0, "");
     }
 
-    const provider = new SocketIOProvider(serverUrl, roomId, ydoc, { autoConnect: true });
+    const provider = new SocketIOProvider(serverUrl, roomId, ydoc, {
+  autoConnect: true,
+  auth: { token: localStorage.getItem("token") },
+})
 
     const COLORS = [
       "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4",
@@ -78,7 +81,7 @@ function CollabEditor({ roomId, username, serverUrl, onClose }) {
             height="100%"
             language="javascript"
             theme="vs-dark"
-            defaultValue="// write your code here"
+            
             onMount={handleMount}
             options={{ fontSize: 14, minimap: { enabled: false }, padding: { top: 12 } }}
           />

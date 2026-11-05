@@ -1,127 +1,117 @@
 import { Server } from "socket.io";
 import { YSocketIO } from "y-socket.io/dist/server";
+import { verifyToken } from "../middleware/auth.js";
 
-let connections = {};
-let messages = {};
-let timeOnline = {};
+const connections = {};   // room -> [socketIds]
+const messages = {};      // room -> [chat messages]
+const screenSharers = {}; // room -> socketId sharing
+const socketRoom = {};    // socketId -> room
 
-export const connectToSocket = (server) => {
-    const io = new Server(server, {
-        cors: {
-            origin: "*",
-            methods: ["GET", "POST"],
-            allowedHeaders: ["*"],
-            credentials: true
-        }
-    });
-    const ysocketIO = new YSocketIO(io);
-    ysocketIO.initialize();
-    io.of("/collab").on("connection", (socket) => {
-    console.log("COLLAB namespace connected:", socket.id);
-});
+const MAX_MESSAGES_PER_ROOM = 200;
+const MAX_MESSAGE_LENGTH = 2000;
 
-    io.on("connection", (socket) => {
-        console.log("New socket connected:", socket.id);
+export const connectToSocket = (server, allowedOrigins) => {
+  const io = new Server(server, {
+    cors: { origin: allowedOrigins, methods: ["GET", "POST"], credentials: true },
+  });
 
-        socket.on('join-call', (path) => {
-            if (!connections[path]) {
-                connections[path] = [];
-            }
+  io.use((socket, next) => {
+    const payload = verifyToken(socket.handshake.auth?.token);
+    if (!payload) return next(new Error("unauthorized"));
+    socket.data.user = payload;
+    next();
+  });
 
-            connections[path].push(socket.id);
-            timeOnline[socket.id] = Date.now();
+  const ysocketIO = new YSocketIO(io, {
+    authenticate: (handshake) => !!verifyToken(handshake.auth?.token),
+  });
+  ysocketIO.initialize();
 
-            // Notify all users in the room
-            connections[path].forEach((id) => {
-                io.to(id).emit("user-joined", socket.id, connections[path]);
-            });
+  const leaveRoom = (socket) => {
+    const room = socketRoom[socket.id];
+    if (!room) return;
 
-            // Send previous messages to new user
-            if (messages[path]) {
-                messages[path].forEach((msg) => {
-                    io.to(socket.id).emit(
-                        "chat-message",
-                        msg.data,
-                        msg.sender,
-                        msg["socket-id-sender"]
-                    );
-                });
-            }
-        });
-
-        socket.on("signal", (toID, message) => {
-            io.to(toID).emit("signal", socket.id, message);
-        });
-
-        socket.on('chat-message', (data, sender) => {
-            const [matchingRoom, found] = Object.entries(connections).reduce(
-                ([room, isFound], [roomKey, roomValue]) => {
-                    if (!isFound && roomValue.includes(socket.id)) {
-                        return [roomKey, true];
-                    }
-                    return [room, isFound];
-                },
-                ["", false]
-            );
-
-            if (found && matchingRoom) {
-                if (!messages[matchingRoom]) {
-                    messages[matchingRoom] = [];
-                }
-
-                messages[matchingRoom].push({
-                    data,
-                    sender,
-                    "socket-id-sender": socket.id
-                });
-
-                connections[matchingRoom].forEach((ele) => {
-                    io.to(ele).emit("chat-message", data, sender, socket.id);
-                });
-            }
-        });
-       socket.on("screen-share-started", (id) => {
-    console.log("SERVER GOT SCREEN SHARE:", id);
-
-    io.emit("screen-share-started", id);
-});
-
-    socket.on("screen-share-stopped", () => {
-    socket.broadcast.emit("screen-share-stopped");
-});
-
-    socket.on("disconnect", () => {
-    const diffTime = Math.abs(timeOnline[socket.id] - Date.now());
-    let key;
-
-    for (const [k, v] of Object.entries(connections)) {
-        if (v.includes(socket.id)) {
-            key = k;
-
-            // notify others
-            v.forEach(id => {
-                io.to(id).emit("user-left", socket.id);
-            });
-
-            // remove socket
-            connections[k] = v.filter(id => id !== socket.id);
-
-            // cleanup empty room
-            if (connections[k].length === 0) {
-                delete connections[k];
-            }
-
-            break;
-        }
+    if (screenSharers[room] === socket.id) {
+      delete screenSharers[room];
+      (connections[room] || []).forEach((id) => {
+        if (id !== socket.id) io.to(id).emit("screen-share-stopped");
+      });
     }
 
-    delete timeOnline[socket.id];
-});
-   
+    const remaining = (connections[room] || []).filter((id) => id !== socket.id);
+    remaining.forEach((id) => io.to(id).emit("user-left", socket.id));
 
+    if (remaining.length === 0) {
+      delete connections[room];
+      delete messages[room];
+      delete screenSharers[room];
+    } else {
+      connections[room] = remaining;
+    }
+    delete socketRoom[socket.id];
+  };
+
+  io.on("connection", (socket) => {
+    socket.on("join-call", (path) => {
+      if (typeof path !== "string" || !path || path.length > 200) return;
+      if (socketRoom[socket.id]) return;
+
+      if (!connections[path]) connections[path] = [];
+      connections[path].push(socket.id);
+      socketRoom[socket.id] = path;
+      console.log("JOIN:", path, "users now:", connections[path]);
+
+      connections[path].forEach((id) => {
+        io.to(id).emit("user-joined", socket.id, connections[path]);
+      });
+
+      (messages[path] || []).forEach((msg) => {
+        io.to(socket.id).emit("chat-message", msg.data, msg.sender, msg["socket-id-sender"]);
+      });
+
+      if (screenSharers[path]) {
+        io.to(socket.id).emit("screen-share-started", screenSharers[path]);
+      }
     });
 
-    return io;
-};
+    socket.on("signal", (toID, message) => {
+      const room = socketRoom[socket.id];
+      if (!room || socketRoom[toID] !== room) return;
+      io.to(toID).emit("signal", socket.id, message);
+    });
 
-    
+    socket.on("chat-message", (data, sender) => {
+      const room = socketRoom[socket.id];
+      if (!room || typeof data !== "string" || !data.trim()) return;
+
+      const text = data.slice(0, MAX_MESSAGE_LENGTH);
+      const name = String(sender || socket.data.user?.username || "Guest").slice(0, 50);
+
+      if (!messages[room]) messages[room] = [];
+      messages[room].push({ data: text, sender: name, "socket-id-sender": socket.id });
+      if (messages[room].length > MAX_MESSAGES_PER_ROOM) messages[room].shift();
+
+      connections[room].forEach((id) => io.to(id).emit("chat-message", text, name, socket.id));
+    });
+
+    socket.on("screen-share-started", () => {
+      const room = socketRoom[socket.id];
+      if (!room) return;
+      screenSharers[room] = socket.id;
+      connections[room].forEach((id) => io.to(id).emit("screen-share-started", socket.id));
+    });
+
+    socket.on("screen-share-stopped", () => {
+      const room = socketRoom[socket.id];
+      if (!room || screenSharers[room] !== socket.id) return;
+      delete screenSharers[room];
+      connections[room].forEach((id) => {
+        if (id !== socket.id) io.to(id).emit("screen-share-stopped");
+      });
+    });
+
+    socket.on("disconnect", () => leaveRoom(socket));
+  });
+
+  return io;
+};

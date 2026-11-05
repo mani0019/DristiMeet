@@ -6,11 +6,18 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { connectToSocket } from './controllers/connectionSocket.js';
 import userRoutes from "./routes/userroutes.js";
+  for (const key of ["MONGO_URI", "JWT_SECRET"]) {
+    if (!process.env[key]) {
+      console.error(`Missing required environment variable: ${key}`);
+      process.exit(1);
+    }
+  }
+  const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+    .split(",").map((o) => o.trim()).filter(Boolean);
 
 const app = express();
 const server = createServer(app);
-const io = connectToSocket(server);
-
+connectToSocket(server, allowedOrigins);
 app.set("port", process.env.PORT || 8080);
 
 app.use(cors());

@@ -8,6 +8,11 @@ export const AuthContext = createContext({});
 const client = axios.create({
   baseURL: `${server}/api/v1/users`,
 });
+client.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();

@@ -54,6 +54,13 @@ const login = async (req, res) => {
 ================================ */
 const register = async (req, res) => {
   const { name, username, password } = req.body;
+    if (typeof name !== "string" || !name.trim() ||
+      typeof username !== "string" || !username.trim() ||
+      typeof password !== "string" || password.length < 6) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: "Name, username and a password of at least 6 characters are required",
+    });
+  }
 
   try {
     const existingUser = await User.findOne({ username });
@@ -86,47 +93,26 @@ const register = async (req, res) => {
 /* ===============================
    GET HISTORY
 ================================ */
-const getUserHistory = async (req, res) => {
-  const { token } = req.query;
-
-  try {
-    // ✅ Verify JWT instead of DB lookup
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    const meetings = await Meeting.find({ user_id: decoded.username })
-      .sort({ date: -1 });
-
-    res.json({ meetings });
-  } catch (err) {
-    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
-      return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid or expired token" });
+  const getUserHistory = async (req, res) => {
+    try {
+      const meetings = await Meeting.find({ user_id: req.user.username }).sort({ date: -1 });
+      res.json({ meetings });
+    } catch (err) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: err.message });
     }
-    res.status(500).json({ message: err.message });
-  }
-};
+  };
 
-/* ===============================
-   ADD TO HISTORY
-================================ */
-const addToHistory = async (req, res) => {
-  const { token, meetingCode } = req.body;
-
-  try {
-    // ✅ Verify JWT instead of DB lookup
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    await Meeting.create({
-      user_id: decoded.username,
-      meetingCode,
-    });
-
-    res.status(201).json({ message: "Meeting added" });
-  } catch (err) {
-    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
-      return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid or expired token" });
+  const addToHistory = async (req, res) => {
+    const { meetingCode } = req.body;
+    if (typeof meetingCode !== "string" || !meetingCode.trim()) {
+      return res.status(httpStatus.BAD_REQUEST).json({ message: "meetingCode is required" });
     }
-    res.status(500).json({ message: err.message });
-  }
-};
+    try {
+      await Meeting.create({ user_id: req.user.username, meetingCode: meetingCode.trim() });
+      res.status(httpStatus.CREATED).json({ message: "Meeting added" });
+    } catch (err) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: err.message });
+    }
+  };
 
 export { login, register, getUserHistory, addToHistory };

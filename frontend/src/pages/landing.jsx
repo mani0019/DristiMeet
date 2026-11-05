@@ -69,7 +69,7 @@ export default function LandingPage() {
           <div className="heroButtons">
             <button
               className="primaryBtn largeBtn"
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/auth")}
             >
               Start Collaborating
             </button>
@@ -168,7 +168,7 @@ export default function LandingPage() {
 
         <div className="featuresGrid">
           <div className="featureCard">
-            <h3>HD Video Meetings</h3>
+            <h3>Video Meetings</h3>
             <p>
               Crystal-clear communication and multi-participant spaces powered directly by customized WebRTC routing.
             </p>
@@ -189,25 +189,15 @@ export default function LandingPage() {
           </div>
 
           <div className="featureCard">
-            <h3>Low-Latency Screen Sharing</h3>
+            <h3>Screen Sharing</h3>
             <p>
               Present complete desktop window viewports instantly during review sessions and pairs debugging steps.
             </p>
           </div>
 
-          <div className="featureCard">
-            <h3>Presence Tracking</h3>
-            <p>
-              Monitor workspace activity states instantly via Socket.IO-driven collaborator synchronization fields.
-            </p>
-          </div>
+          
 
-          <div className="featureCard">
-            <h3>Isolated Workspaces</h3>
-            <p>
-              Ensure complete room partition security through session access gates and persistent database paths.
-            </p>
-          </div>
+          
         </div>
       </section>
 
